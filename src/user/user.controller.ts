@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { Request } from 'express';
 
 
 @Controller('user')
@@ -13,14 +14,10 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    
+  findOne(@Req() request: Request) {
+    return this.userService.findOne(request.headers.authorization)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    
-  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() user: User) {
