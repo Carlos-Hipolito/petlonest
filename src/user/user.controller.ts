@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { Request } from 'express';
-
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -13,19 +13,20 @@ export class UserController {
     return this.userService.create(user);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findOne(@Req() request: Request) {
     return this.userService.findOne(request.headers.authorization)
   }
 
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() user: User) {
-    return this.userService.update(id, user)
+  @UseGuards(AuthGuard('jwt'))
+  @Patch()
+  update(@Body() user: User, @Req() req: Request) {
+    return this.userService.update(user, req.headers.authorization)
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id)
+  @UseGuards(AuthGuard('jwt'))
+  @Delete()
+  remove(@Req() req: Request) {
+    return this.userService.remove(req.headers.authorization)
   }
 }
