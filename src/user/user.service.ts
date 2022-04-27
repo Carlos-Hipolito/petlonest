@@ -6,12 +6,13 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { verify } from 'jsonwebtoken';
 import { AuthGuard } from '@nestjs/passport';
 const bcrypt = require('bcryptjs')
+import {Pet} from '../pet/entities/pet.entity'
 require('dotenv').config()
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectModel('User') private readonly userModel: Model<User>){}
+  constructor(@InjectModel('User') private readonly userModel: Model<User>, @InjectModel('Pet') private readonly petModel: Model<Pet>){}
 
   async findOne(token: string){
     const [, jwt] = token.split(" ")
@@ -36,7 +37,8 @@ export class UserService {
   async remove(token: string) {
     const [, jwt] = token.split(" ")
     const userid = verify(jwt,process.env.secretkey)
+    await this.petModel.deleteMany({user_id: userid.sub})
     await this.userModel.findByIdAndDelete(userid.sub)
-    return ({message: `User ${userid} deleted.`});
+    return ({message: `User ${userid.sub} deleted.`});
   }
 }
