@@ -13,10 +13,10 @@ export class AuthService {
 
     async login(email: String, password: String){
         const user = await this.userModel.findOne({email: email})
-        const userid = user._id.toString()
-        if (!user){
+        if (!user){ 
             return ({error: "Incorrect user or password!"})
         }
+        const userid = user._id.toString()
 
         const authenticated = await bcrypt.compare(password, user.password)
         if (authenticated == false){

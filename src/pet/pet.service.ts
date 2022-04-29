@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Pet } from './entities/pet.entity';
 import {Model} from 'mongoose';
@@ -42,12 +42,12 @@ export class PetService {
     return ({message: `Pet ${newPet.name} updated.`})
   }
 
-  async remove(token: string, petid: string) {
+  async delete(token: string, petid: string) {
     const [, jwt] = token.split(" ")
     const userid = verify(jwt,process.env.secretkey)
     const pet = await this.petModel.findOneAndDelete({user_id: userid.sub, _id: petid})
     if (!pet){
-      return ({error: "This pet don't exist or this is not your pet."})
+      throw new HttpException("This pet don't exist", HttpStatus.NO_CONTENT)
     }
     return ({message: `Pet ${pet.name} deleted`});
   }

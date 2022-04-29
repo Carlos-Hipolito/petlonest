@@ -10,7 +10,7 @@ export class PetController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Req() req: Request, @Body() pet: Pet) {
+  create(@Req() req: Request, @Body() pet: Pet) {
     return this.petService.create(req.headers.authorization, pet);
   }
 
@@ -26,7 +26,7 @@ export class PetController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: Request) {
-    return this.petService.remove(req.headers.authorization, id);
+  delete(@Param('id') id: string, @Req() req: Request) {
+    return this.petService.delete(req.headers.authorization, id);
   }
 }

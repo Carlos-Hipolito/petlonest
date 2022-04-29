@@ -1,10 +1,8 @@
-import { HttpStatus, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import { User } from './entities/user.entity';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { verify } from 'jsonwebtoken';
-import { AuthGuard } from '@nestjs/passport';
 const bcrypt = require('bcryptjs')
 import {Pet} from '../pet/entities/pet.entity'
 require('dotenv').config()
